@@ -1,12 +1,12 @@
-$(document).ready(function() {
+$(document).ready(function(e) {
     $.ajax({
-        type: "GET",
-        url: "https://servicodados.ibge.gov.br/api/v1/localidades/distritos ",
+        type: "get",
+        url: "https://servicodados.ibge.gov.br/api/v1/localidades/estados",
         data: { orderBy: "nome" },
-        dataType: "JSON",
-        sucess: function(response) {
+        dataType: "json",
+        success: function(response) {
             $.each(response, function(indexInArray, valueOfElement) {
-                var option = "<option>" + valueOfElement.nome + "</option>"
+                var option = "<option>"+valueOfElement.sigla+"</option>"
                 $("#UF").append(option)
             })
         }
@@ -14,19 +14,25 @@ $(document).ready(function() {
 
     $('#UF').change(function(e) {
         e.preventDefault()
-
+        $("#local").empty()
         var UF = $("#UF").val()
-        if (UF == 'Estados') { return }
+
+
+        if (UF == 'Estados')  {
+            var option = "<option>Cidades</option>"
+            $("#local").append(option)
+            return
+        }
 
         $.ajax({
-            type: "GET",
-            url: "https://servicodados.ibge.gov.br/api/v1/localidades/estados/" + uf + "/municipios",
+            type: "get",
+            url: "https://servicodados.ibge.gov.br/api/v1/localidades/estados/"+ UF + "/municipios",
             data: { orderBy: "nome" },
-            dataType: 'JSON',
-            sucess: function(response) {
+            dataType: 'json',
+            success: function(response) {
                 $.each(response, function(indexInArray, valueOfElement) {
                     var option = "<option>" + valueOfElement.nome + "</option>"
-                    $("#UF").append(option)
+                    $("#local").append(option)
                 });
 
             }
